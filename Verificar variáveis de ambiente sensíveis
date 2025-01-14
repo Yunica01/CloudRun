@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Listar serviços e variáveis de ambiente
+echo "Verificando variáveis de ambiente nos serviços do Cloud Run..."
+for SERVICE in $(gcloud run services list --format="value(metadata.name)" --platform=managed); do
+    echo "Serviço: $SERVICE"
+    gcloud run services describe $SERVICE --platform=managed --format="value(spec.template.spec.containers[0].env)" | grep -E "password|key|secret" && echo "Atenção: Variáveis sensíveis encontradas no serviço $SERVICE"
+done
