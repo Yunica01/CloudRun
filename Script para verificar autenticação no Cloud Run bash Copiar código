@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Listar serviços do Cloud Run
+echo "Listando serviços do Cloud Run..."
+SERVICES=$(gcloud run services list --platform=managed --format="value(metadata.name)")
+
+# Verificar se a autenticação está ativada em cada serviço
+echo "Verificando autenticação em serviços do Cloud Run..."
+for SERVICE in $SERVICES; do
+    echo "Serviço: $SERVICE"
+    gcloud run services describe $SERVICE --platform=managed --format="value(spec.template.spec.containers[0].securityContext.runAsNonRoot)" | grep "true" || echo "Autenticação não configurada corretamente no serviço $SERVICE"
+done
