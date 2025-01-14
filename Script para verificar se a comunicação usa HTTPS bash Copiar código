@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Verificar se os endpoints do Cloud Run utilizam HTTPS
+echo "Verificando endpoints com HTTPS..."
+for SERVICE in $SERVICES; do
+    URL=$(gcloud run services describe $SERVICE --platform=managed --format="value(status.url)")
+    if [[ $URL != https://* ]]; then
+        echo "Atenção: O serviço $SERVICE não está utilizando HTTPS"
+    else
+        echo "Serviço $SERVICE está seguro com HTTPS"
+    fi
+done
