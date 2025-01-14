@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Verificar timeout dos serviços
+echo "Verificando timeout nos serviços do Cloud Run..."
+for SERVICE in $(gcloud run services list --format="value(metadata.name)" --platform=managed); do
+    echo "Serviço: $SERVICE"
+    TIMEOUT=$(gcloud run services describe $SERVICE --platform=managed --format="value(spec.template.spec.timeoutSeconds)")
+    if [[ $TIMEOUT -gt 300 ]]; then
+        echo "Atenção: Timeout do serviço $SERVICE está configurado para mais de 5 minutos ($TIMEOUT segundos)"
+    fi
+done
