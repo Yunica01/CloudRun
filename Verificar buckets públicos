@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Verificar permissões públicas em todos os buckets
+echo "Verificando buckets públicos..."
+for BUCKET in $(gcloud storage buckets list --format="value(name)"); do
+    echo "Bucket: $BUCKET"
+    gcloud storage buckets get-iam-policy $BUCKET --format="json" | grep "allUsers\|allAuthenticatedUsers" && echo "Atenção: O bucket $BUCKET está público"
+done
